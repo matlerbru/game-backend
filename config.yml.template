@@ -1,0 +1,16 @@
+logging:
+  path: legende-spil.log
+  level: DEBUG
+
+database:
+  host: localhost
+  name: game_backend
+  user: root
+  password: root
+  port: 15000
+  connection_limit: 20
+
+authorization:
+  secret_key: 
+  algorithm: HS256
+  token_expire_time: 30

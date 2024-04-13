@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+
+  legende_spil:
+    container_name: legende_spil
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mlb/legende-spil
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:18080:4040
+    depends_on: 
+      - database
+    networks:
+      - legende_spil
+    volumes:
+      - /var/log/legende-spil:/usr/src/app/output/
+
+  database:
+    container_name: legende_spil_db
+    image: mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=legende_spil
+    networks:
+      - legende_spil
+  
+networks:
+  legende_spil:
