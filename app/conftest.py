@@ -1,10 +1,9 @@
 from di import container
 from schemas import Settings
-from database.mysql import MySqlConnection
+from database.mysql_connector import MySqlConnection
 import pytest
 import asyncio
-import schemas
-import yaml
+import di
 import os
 
 # python3.11 -m pytest src
@@ -12,33 +11,17 @@ import os
 
 def pytest_sessionstart(session):
 
-    with open("config.yml", "r") as file:
-        settings = Settings.model_validate(yaml.safe_load(file))
-        container.config.authorization.from_dict(dict(settings.authorization))
-
     ## could this be made as a daemon?
     os.system("docker compose -f docker-compose-db-test.yml up -d >/dev/null 2>&1")
 
     async def setup_database():
 
-        db_settings = schemas.DatabaseSettings.model_validate(
-            container.config.database()
-        )
-
-        while True:
-            if await MySqlConnection.is_connectable(
-                db_settings.host,
-                db_settings.port,
-                db_settings.user,
-                db_settings.password,
-                db_settings.name,
-            ):
-                break
-            await asyncio.sleep(0.1)
-
         try:
             conn = await container.db_connection()
             cursor = await conn.cursor()
+            
+            await cursor.execute("drop table users;")
+            await cursor.execute("drop table variables;")
 
             await cursor.execute_file("mysql-setup-tables.sql")
             await cursor.execute_file("mysql-setup-test.sql")

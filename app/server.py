@@ -5,14 +5,19 @@ from database.queries import create_user
 import di
 import schemas
 import api
+import time
 
 
 async def main():
-    config = uvicorn.Config(api.api, port=4040, host="0.0.0.0", log_config="log.ini")
+    config = uvicorn.Config(api.api, port=8080, host="0.0.0.0", log_config="log.ini")
     server = uvicorn.Server(config)
 
     try:
         conn = await di.container.db_connection()
+    except:
+        print("Unable to connect to database")
+        exit(1)
+    try:
         cursor = await conn.cursor()
         await cursor.execute_file("mysql-setup-tables.sql")
     finally:

@@ -30,3 +30,9 @@ async def get_user_full(username: str) -> _UserFull:
     finally:
         await cursor.close()
         await conn.close()
+
+
+async def create_user(
+    username: str, password: str, priviledge: schemas.Priviledge
+) -> None:
+    pass

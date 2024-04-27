@@ -1,5 +1,5 @@
 from di import container
-from database.mysql import MySqlConnection
+from database.mysql_connector import MySqlConnection
 from database.queries import get_user_full
 import tempfile
 import schemas
@@ -220,17 +220,15 @@ async def test_cursor_execute_file():
 
 
 @pytest.mark.asyncio
-async def test_cursor_close(): 
+async def test_cursor_close():
     conn = await container.db_connection()
     cursor = await conn.cursor()
     try:
         await cursor.close()
         with pytest.raises(cursor.CursorNotConnectedError):
             await cursor.execute("SELECT * FROM users;")
-            
+
         await cursor.close()
-        
+
     finally:
         await conn.close()
-        
-        

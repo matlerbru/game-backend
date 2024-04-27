@@ -1,8 +1,7 @@
-import database.mysql
+import database.mysql_connector
 import database.interface
 import auth.service
 import user.service
-import schemas
 from dependency_injector import containers, providers
 
 
@@ -11,7 +10,7 @@ class Container(containers.DeclarativeContainer):
     config = providers.Configuration()
 
     db_semaphore = providers.Singleton(
-        database.mysql.ConnectionSemaphore,
+        database.mysql_connector.ConnectionSemaphore,
         host=config.database.host,
         port=config.database.port,
         user=config.database.user,
@@ -21,7 +20,8 @@ class Container(containers.DeclarativeContainer):
     )
 
     db_connection = providers.Factory(
-        database.mysql.acquire_database_connection, connection_semaphore=db_semaphore
+        database.mysql_connector.acquire_database_connection,
+        connection_semaphore=db_semaphore,
     )
 
     auth_service = providers.Factory(

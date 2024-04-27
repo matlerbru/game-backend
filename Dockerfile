@@ -1,12 +1,12 @@
 FROM python:3.11
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src
 
 COPY . .
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p output
 
-COPY src .
+COPY app app
 
-ENTRYPOINT ["python3", "/usr/src/app/src/server.py"]
+ENTRYPOINT ["python3", "app/server.py"]

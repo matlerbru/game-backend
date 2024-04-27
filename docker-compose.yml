@@ -9,8 +9,10 @@ services:
       dockerfile: Dockerfile
     image: mlb/legende-spil
     restart: unless-stopped
+    environment:
+      - DATABASE_NAME=legende_spil
     ports:
-      - 127.0.0.1:18080:4040
+      - 127.0.0.1:8080:8080
     depends_on: 
       - database
     networks:
@@ -25,8 +27,11 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=legende_spil
+    hostname: mysql_db
     networks:
       - legende_spil
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
   
 networks:
   legende_spil:

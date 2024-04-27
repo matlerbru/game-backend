@@ -85,7 +85,7 @@ class MySqlConnection:
             cursor: MySQLCursorAbstract,
         ) -> None:
             self._cursor = cursor
-            
+
         async def execute(
             self, query: str, args: list[str | int | float | bool] | None = None
         ) -> list[dict[str, str | int | float | bool]]:
@@ -129,7 +129,7 @@ class MySqlConnection:
                     results.append(r)
                 except ProgrammingError:
                     raise self.CursorNotConnectedError
-                
+
             return results
 
         async def execute_file(self, file: str) -> dict[str | int | float | bool]:
@@ -139,7 +139,6 @@ class MySqlConnection:
 
         async def close(self) -> None:
             await self._cursor.close()
-            
 
 
 class ConnectionSemaphore:
@@ -162,6 +161,7 @@ class ConnectionSemaphore:
 
     async def acquire(self) -> MySqlConnection:
         await self._semaphore.acquire()
+
         return await MySqlConnection.async_connect(
             self._host,
             self._port,

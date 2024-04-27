@@ -32,7 +32,7 @@ class CursorInterface(ABC):
     @abstractmethod
     async def close(self) -> None:
         raise NotImplementedError
-    
+
     class CursorNotConnectedError(Exception):
         pass
 
